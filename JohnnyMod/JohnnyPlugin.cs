@@ -9,7 +9,9 @@ using System.Security.Permissions;
 using UnityEngine.Networking;
 
 [module: UnverifiableCode]
+#pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
+#pragma warning restore CS0618 // Type or member is obsolete
 
 //rename this namespace
 namespace JohnnyMod
@@ -106,7 +108,7 @@ namespace JohnnyMod
         private void MapZone_TryZoneStart(On.RoR2.MapZone.orig_TryZoneStart orig, MapZone self, UnityEngine.Collider other)
         {
             // if we have the card component get out of this method and dont kys
-            if (other.GetComponent<CardController>() && other.GetComponent<TeamComponent>().teamIndex != TeamIndex.Player)
+            if ((other.GetComponent<CardController>() || other.GetComponent<CoinController>()) && other.GetComponent<TeamComponent>().teamIndex != TeamIndex.Player)
             {
                 return;
             }

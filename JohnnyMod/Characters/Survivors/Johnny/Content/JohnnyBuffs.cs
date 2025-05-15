@@ -15,7 +15,6 @@ namespace JohnnyMod.Survivors.Johnny
                 Color.white,
                 false,
                 false);
-
         }
     }
 }

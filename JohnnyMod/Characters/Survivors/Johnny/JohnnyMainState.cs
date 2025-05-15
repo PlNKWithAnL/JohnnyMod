@@ -10,14 +10,16 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         ///@Desc
         /// This main state only really exists to replace Johnny's sprinting with Vault. This then replaces Deal with Ensenga.
         /// Also implements Roman Cancelling and the Instant Kill
-        
+
         private GenericSkill stepDashSkill;
+        private GenericSkill airDashSkill;
         private JohnnyTensionController tensionCTRL;
 
         public override void OnEnter()
         {
             base.OnEnter();
-            stepDashSkill = skillLocator.FindSkill("LOADOUT_SKILL_PASSIVE");
+            stepDashSkill = skillLocator.FindSkill("LOADOUT_SKILL_DASH");
+            airDashSkill = skillLocator.FindSkill("LOADOUT_SKILL_AIRDASH");
             tensionCTRL = GetComponent<JohnnyTensionController>();
         }
 
@@ -25,6 +27,11 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         {
             bool canExecute = stepDashSkill.CanExecute();
             if (!canExecute)
+            {
+                sprintInputReceived = false;
+            }
+
+            if(!isGrounded && characterMotor.jumpCount >= characterBody.maxJumpCount)
             {
                 sprintInputReceived = false;
             }
@@ -54,6 +61,25 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
             if (sprintInputReceived && canExecute && isAuthority)
             {
                 SkillDef skillDef = stepDashSkill.skillDef;
+
+                if (!isGrounded && characterMotor.jumpCount < characterBody.maxJumpCount)
+                {
+                    skillDef = airDashSkill.skillDef;
+
+                    stepDashSkill.hasExecutedSuccessfully = true;
+                    //ugly avoid CharacterBody.OnSkillActivated cause it was not intended to be used with extra generic skills woops
+                    stepDashSkill.stateMachine.SetInterruptState(skillDef.InstantiateNextState(airDashSkill), skillDef.interruptPriority);
+                    stepDashSkill.stock -= skillDef.stockToConsume;
+
+
+                    characterMotor.jumpCount++;
+                    return;
+                }
+
+                if(!isGrounded && characterMotor.jumpCount >= characterBody.maxJumpCount)
+                {
+                    return;
+                }
 
                 stepDashSkill.hasExecutedSuccessfully = true;
                 //ugly avoid CharacterBody.OnSkillActivated cause it was not intended to be used with extra generic skills woops

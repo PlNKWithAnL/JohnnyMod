@@ -29,6 +29,8 @@ namespace JohnnyMod.Survivors.Johnny.Components
         private float _tension;
         private float _prevTension;
 
+        public int mfLevel = 1;
+
         private OverlayController overlayController;
         private OverlayController cardOverlayController;
         private HGTextMeshProUGUI uiTensionPerc;
@@ -79,6 +81,8 @@ namespace JohnnyMod.Survivors.Johnny.Components
             //float num = (this.charBody.outOfCombat ? this.tensionGainedPerSecond : this.tensionGainedPerSecondInCombat);
             AddTension(TENSION_PER_SECOND * Time.fixedDeltaTime);
             UpdateUI();
+
+            Chat.AddMessage($"MF Level {mfLevel}");
         }
         
         private void UpdateUI()
@@ -127,6 +131,28 @@ namespace JohnnyMod.Survivors.Johnny.Components
                 return;
             }
             this.Network_tension = Mathf.Clamp(this.tension + amount, 0, MAX_TENSION);
+        }
+
+        [Server]
+        public void AddMistFiner()
+        {
+            if (!NetworkServer.active)
+            {
+                Debug.LogWarning("[Server] function 'System.Void JohnnyMod.JohnnyTensionController::AddMistFiner()' called on client.");
+                return;
+            }
+            this.mfLevel = Mathf.Clamp(this.mfLevel + 1, 0, 3);
+        }
+        
+        [Server]
+        public void ResetMistFiner()
+        {
+            if (!NetworkServer.active)
+            {
+                Debug.LogWarning("[Server] function 'System.Void JohnnyMod.JohnnyTensionController::ResetMistFiner()' called on client.");
+                return;
+            }
+            this.mfLevel = 1;
         }
 
         public float Network_tension

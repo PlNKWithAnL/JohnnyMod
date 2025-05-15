@@ -5,6 +5,7 @@ using JohnnyMod.Survivors.Johnny.Components;
 using JohnnyMod.Survivors.Johnny.SkillStates;
 using RoR2;
 using RoR2.Skills;
+using R2API;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -190,6 +191,7 @@ namespace JohnnyMod.Survivors.Johnny
         {
             //example of how to create a HitBoxGroup. see summary for more details
             Prefabs.SetupHitBoxGroup(characterModelObject, "SwordGroup", "SwordHitbox");
+            Prefabs.SetupHitBoxGroup(characterModelObject, "MistFinerGroup", "MistFinerHitbox");
             //Prefabs.SetupHitBoxGroup(characterModelObject, "KatanaGroup", "KatanaHitbox");
             //Prefabs.SetupHitBoxGroup(characterModelObject, "MistFinerGroup", "MistFinerHitbox");
         }
@@ -228,15 +230,26 @@ namespace JohnnyMod.Survivors.Johnny
 
         private void CreatePassives()
         {
+            GenericSkill fakeSkill = Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, "LOADOUT_SKILL_PASSIVE", "passiveSkill", false);
+            
+            SkillDef fakeDashDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "JohnnyDash",
+                skillNameToken = Johnny_PREFIX + "PASSIVE_NAME",
+                skillDescriptionToken = Johnny_PREFIX + "PASSIVE_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"),
+                keywordTokens = new string[] { Johnny_PREFIX + "KEYWORD_TENSION", Johnny_PREFIX + "KEYWORD_STEPDASH", Johnny_PREFIX + "KEYWORD_RC" },
+            });
+
+            Skills.AddSkillsToFamily(fakeSkill.skillFamily, fakeDashDef);
+
             //this exists so we can assign Vault to the passive skill family.
-            GenericSkill passiveSkill = Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, "LOADOUT_SKILL_PASSIVE", "johnnypassive");
+            GenericSkill stepDashFamily = Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, "LOADOUT_SKILL_DASH", "johnnydash", true);
+
+            GenericSkill airdashSkill = Skills.CreateGenericSkillWithSkillFamily(bodyPrefab, "LOADOUT_SKILL_AIRDASH", "johnnyAirdash", true);
 
             SkillDef stepDashDef = Skills.CreateSkillDef(new SkillDefInfo
             {
-                //skillName = "JohnnyDash",
-                //skillNameToken = Johnny_PREFIX + "UTILITY_DASH_NAME",
-                //skillDescriptionToken = Johnny_PREFIX + "UTILITY_DASH_DESCRIPTION",
-                //skillIcon = assetBundle.LoadAsset<Sprite>("texUtilityIcon"),
                 skillName = "JohnnyDash",
                 skillNameToken = Johnny_PREFIX + "PASSIVE_NAME",
                 skillDescriptionToken = Johnny_PREFIX + "PASSIVE_DESCRIPTION",
@@ -267,10 +280,48 @@ namespace JohnnyMod.Survivors.Johnny
             });
 
             JohnnyStaticValues.StepDash = stepDashDef;
+            
+            SkillDef airDashDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "JohnnyAirdash",
+                skillNameToken = Johnny_PREFIX + "PASSIVE_NAME",
+                skillDescriptionToken = Johnny_PREFIX + "PASSIVE_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialIcon"), //texPassiveIcon
+                keywordTokens = new string[] { Johnny_PREFIX + "KEYWORD_TENSION", Johnny_PREFIX + "KEYWORD_STEPDASH", Johnny_PREFIX + "KEYWORD_RC" },
 
-            Skills.AddSkillsToFamily(passiveSkill.skillFamily, stepDashDef);
+                activationState = new EntityStates.SerializableEntityStateType(typeof(AirDash)),
+                activationStateMachineName = "Weapon2",
+                interruptPriority = EntityStates.InterruptPriority.PrioritySkill,
+
+                baseRechargeInterval = 1.25f,
+                baseMaxStock = 1,
+
+                rechargeStock = 1,
+                requiredStock = 1,
+                stockToConsume = 1,
+
+                resetCooldownTimerOnUse = false,
+                fullRestockOnAssign = true,
+                dontAllowPastMaxStocks = false,
+                mustKeyPress = false,
+                beginSkillCooldownOnSkillEnd = false,
+
+                isCombatSkill = false,
+                canceledFromSprinting = false,
+                cancelSprintingOnActivation = false,
+                forceSprintDuringState = true,
+            });
+
+            stepDashFamily.hideInCharacterSelect = true;
+            stepDashFamily.SetHideInLoadout(true);
+
+            airdashSkill.hideInCharacterSelect = true;
+            airdashSkill.SetHideInLoadout(true);
+
+            Skills.AddSkillsToFamily(airdashSkill.skillFamily, airDashDef);
+            Skills.AddSkillsToFamily(stepDashFamily.skillFamily, stepDashDef);
         }
-
+            
         //if this is your first look at skilldef creation, take a look at Secondary first
         private void AddPrimarySkills()
         {
@@ -432,6 +483,30 @@ namespace JohnnyMod.Survivors.Johnny
             });
 
             Skills.AddSpecialSkills(bodyPrefab, specialSkillDef1);
+            
+            SkillDef coinDef = Skills.CreateSkillDef(new SkillDefInfo
+            {
+                skillName = "JohnnyCoin",
+                skillNameToken = Johnny_PREFIX + "SPECIAL_COIN_NAME",
+                skillDescriptionToken = Johnny_PREFIX + "SPECIAL_COIN_DESCRIPTION",
+                skillIcon = assetBundle.LoadAsset<Sprite>("texSpecialCoin"),
+                keywordTokens = new string[]{ Johnny_PREFIX + "KEYWORD_COIN", Johnny_PREFIX + "KEYWORD_POP", Johnny_PREFIX + "KEYWORD_STUN" },
+
+                activationState = new EntityStates.SerializableEntityStateType(typeof(SkillStates.Coin)),
+                //setting this to the "weapon2" EntityStateMachine allows us to cast this skill at the same time primary, which is set to the "weapon" EntityStateMachine
+                activationStateMachineName = "Weapon",
+                interruptPriority = EntityStates.InterruptPriority.Skill,
+
+                baseMaxStock = 3,
+                baseRechargeInterval = 3f,
+
+                isCombatSkill = true,
+                mustKeyPress = false,
+            });
+
+            JohnnyStaticValues.Coin = coinDef;
+
+            Skills.AddSpecialSkills(bodyPrefab, coinDef);
         }
         #endregion skills
         

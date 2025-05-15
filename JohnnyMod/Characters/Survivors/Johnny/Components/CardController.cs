@@ -121,7 +121,7 @@ namespace JohnnyMod.Survivors.Johnny.Components
                     radius = 15f,
                     baseForce = 0f,
                     crit = damageInfo.crit,
-                    procCoefficient = 1f,
+                    procCoefficient = 0.3f,
                     attacker = damageInfo.attacker,
                     inflictor = base.gameObject,
                     damageType = damageInfo.damageType | DamageType.Stun1s,
