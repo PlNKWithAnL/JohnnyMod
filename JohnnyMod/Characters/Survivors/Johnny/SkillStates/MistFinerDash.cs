@@ -20,6 +20,16 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         private HurtBoxGroup hurtboxGroupTransform;
         private float stopwatch;
         private Vector3 blinkVector = Vector3.zero;
+        private OverlapAttack attack;
+
+        private bool inHitPause;
+        private float hitStopDuration;
+        private float hitPauseTimer;
+        private HitStopCachedState hitStopCachedState;
+        private Vector3 storedVelocity;
+        private Animator animator;
+
+        private bool hasFired = false;
 
         public override void OnEnter()
         {
@@ -43,6 +53,31 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
             Util.PlaySound("Play_huntress_shift_start", gameObject);
 
             PlayAnimation("UpperBody, Override", "MistFinerLoop");
+
+            if (isAuthority)
+            {
+                characterBody.AddTimedBuff(RoR2Content.Buffs.HiddenInvincibility, 1f * duration);
+                characterBody.AddTimedBuff(RoR2Content.Buffs.Intangible, 1f * duration);
+            }
+
+            animator = GetModelAnimator();
+            inHitPause = false;
+            hitStopDuration = 0.012f;
+
+            attack = new OverlapAttack();
+            attack.damageType = DamageType.Generic;
+            attack.attacker = gameObject;
+            attack.inflictor = gameObject;
+            attack.teamIndex = GetTeam();
+            attack.damage = JohnnyStaticValues.mistFinerDamageCoeffecient * damageStat;
+            attack.procCoefficient = 1;
+            attack.hitEffectPrefab = EntityStates.Commando.CommandoWeapon.FirePistol2.hitEffectPrefab;
+            attack.forceVector = Vector3.zeroVector;
+            attack.pushAwayForce = 0;
+            attack.hitBoxGroup = FindHitBoxGroup("MistFinerGroup");
+            attack.isCrit = RollCrit();
+
+            hasFired = false;
         }
 
         public override void FixedUpdate()
@@ -58,6 +93,46 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
             {
                 this.outer.SetNextStateToMain();
             }
+
+            if (isAuthority)
+            {
+                if (attack.Fire())
+                {
+                    OnHitEnemyAuthority();
+                }
+            }
+
+            hitPauseTimer -= Time.deltaTime;
+
+            if (hitPauseTimer <= 0f && inHitPause)
+            {
+                RemoveHitstop();
+            }
+        }
+
+        protected void ApplyHitstop()
+        {
+            if (!inHitPause && hitStopDuration > 0f)
+            {
+                storedVelocity = characterMotor.velocity;
+                hitStopCachedState = CreateHitStopCachedState(characterMotor, animator, "MistFiner.playbackRate");
+                hitPauseTimer = hitStopDuration / attackSpeedStat;
+                inHitPause = true;
+            }
+        }
+
+        private void RemoveHitstop()
+        {
+            ConsumeHitStopCachedState(hitStopCachedState, characterMotor, animator);
+            inHitPause = false;
+            characterMotor.velocity = storedVelocity;
+        }
+
+        protected virtual void OnHitEnemyAuthority()
+        {
+            Util.PlaySound("Play_merc_shift_slice", gameObject);
+
+            ApplyHitstop();
         }
 
         public override void OnExit()

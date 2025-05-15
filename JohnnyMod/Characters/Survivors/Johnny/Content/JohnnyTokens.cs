@@ -47,6 +47,9 @@ namespace JohnnyMod.Survivors.Johnny
             Language.Add(prefix + "KEYWORD_TENSION", "<style=cKeywordName>Tension</style>\nA unique meter resource used for <style=cKeywordName>Roman Cancel</style> Landing successful attacks fills up the meter.");
             Language.Add(prefix + "KEYWORD_STEPDASH", "<style=cKeywordName>Step Dash</style>\nInstead of a traditional dash, Johnny lunges forwards a short distance.");
             Language.Add(prefix + "KEYWORD_RC", $"<style=cKeywordName>Roman Cancel</style>\nPressing <style=cIsUtility>Primary, Secondary, and Special</style> at the same time resets your state of action, preserving your momentum.");
+            Language.Add(prefix + "KEYWORD_COIN", $"<style=cKeywordName>Coins</style>\nOn equipping coin, you give up the ability to charge <style=cIsUtility>Mist Finer</style> by holding. Instead you level up <style=cIsUtility>Mist Finer</style> by landing coins.");
+            Language.Add(prefix + "KEYWORD_POP", $"<style=cKeywordName>Coin Impact</style>\nWhen a coin hits an enemy, it increases <style=cIsUtility>Mist Finer</style> level by 1. Coins hitting the ground instead explode and stun.");
+            Language.Add(prefix + "KEYWORD_STUN", $"<style=cIsUtility>Stunning.</style>");
             #endregion
 
             #region Primary
@@ -70,10 +73,13 @@ namespace JohnnyMod.Survivors.Johnny
             #region Special
             Language.Add(prefix + "SPECIAL_DEAL_NAME", "Deal");
             Language.Add(prefix + "SPECIAL_DEAL_DESCRIPTION", $"Throw a card that deals no damage, but can be hit by Mist Finer, dealing 1.25x damage.");
-            #endregion
 
-            #region Achievements
-            Language.Add(Tokens.GetAchievementNameToken(JohnnyMasteryAchievement.identifier), "Johnny: Mastery");
+            Language.Add(prefix + "SPECIAL_COIN_NAME", "Glitter is Gold");
+            Language.Add(prefix + "SPECIAL_COIN_DESCRIPTION", $"Toss a coin into the air, striking this coin at the perfect time splits it into 2.");
+        #endregion
+
+        #region Achievements
+        Language.Add(Tokens.GetAchievementNameToken(JohnnyMasteryAchievement.identifier), "Johnny: Mastery");
             Language.Add(Tokens.GetAchievementDescriptionToken(JohnnyMasteryAchievement.identifier), "As Johnny, beat the game or obliterate on Monsoon.");
             #endregion
         }

@@ -1,6 +1,7 @@
 ﻿using EntityStates;
 using JohnnyMod.Characters.Survivors.Johnny.Components;
 using JohnnyMod.Survivors.Johnny;
+using JohnnyMod.Survivors.Johnny.Components;
 using RoR2;
 using RoR2.HudOverlay;
 using RoR2.Projectile;
@@ -18,7 +19,7 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         //delay on firing is usually ass-feeling. only set this if you know what you're doing
         public static float firePercentTime = 0.0f;
         public static float recoil = 3f;
-        public static float range = 75f;
+        public static float range = 100f; //75
         public static GameObject tracerEffectPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/Tracers/TracerGoldGat");
 
         private float duration;
@@ -31,11 +32,20 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
 
         private float lvl1time = 1f;
         private float lvl2time = 2f;
+        private int mistLevel = 1;
 
         private bool tier1 = false;
         private bool tier2 = false;
+        private JohnnyTensionController tension;
         private OverlayController overlayController;
         private JohnnyHeadshotVisualizer headshotVisualizer;
+        private bool canCharge = true;
+
+        private float flurryStartTime = 0f;
+        private float Level3FlurryTimer = 1.5f;
+        private float flurryCounter = 0;
+        private float flurryInterval = 0.065f;
+        private bool updatedVisual = false;
 
         public override void OnEnter()
         {
@@ -69,6 +79,21 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
                 childLocatorEntry = "ScopeContainer"
             });
             overlayController.onInstanceAdded += this.OverlayController_onInstanceAdded;
+
+            //If it isnt coin, we can charge, if it is coin we can not charge.
+            canCharge = skillLocator.special.skillDef != JohnnyStaticValues.Coin;
+
+            if (canCharge)
+            {
+                Level3FlurryTimer = 0;
+            }
+
+            //if we have Coin equipped we wanna set the mist finer level directly.
+            if (!canCharge)
+            {
+                tension = GetComponent<JohnnyTensionController>();
+                mistLevel = tension.mfLevel;
+            }
         }
 
         private void OverlayController_onInstanceAdded(OverlayController arg1, GameObject arg2)
@@ -91,41 +116,60 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
             childLoc.FindChild("KatanaHilt").gameObject.SetActive(false);
             childLoc.FindChild("KatanaBlade").gameObject.SetActive(false);
             childLoc.FindChild("SwordSimp").gameObject.SetActive(false);
+            tension.ResetMistFiner();
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-
-            if (fixedAge >= lvl1time && !tier1)
+            Chat.AddMessage($"Mist Finer MF Level {mistLevel}");
+            if (!canCharge && !updatedVisual)
             {
-                tier1 = true;
-                AkSoundEngine.SetRTPCValue("MFLevel", 0, gameObject);
-                Util.PlaySound("PlayMistFinerLvlUp", gameObject);
-                //spawn the level up effect on the sheath
-                EffectData effectData = new EffectData
+                updatedVisual = true;
+                if(mistLevel == 2)
                 {
-                    origin = childLoc.FindChild("SheenSpawn").transform.position,
-                    scale = 1f,
-                };
-                EffectManager.SpawnEffect(JohnnyAssets.mistFinerLvlUp, effectData, transmit: true);
-                if (headshotVisualizer)
-                    headshotVisualizer.UpdatePrefab(JohnnyAssets.headshotVisualizer1);
+                    if (headshotVisualizer)
+                        headshotVisualizer.UpdatePrefab(JohnnyAssets.headshotVisualizer1);
+                }
+                if(mistLevel == 3)
+                {
+                    if (headshotVisualizer)
+                        headshotVisualizer.UpdatePrefab(JohnnyAssets.headshotVisualizer2);
+                }
             }
-            if (fixedAge >= lvl2time && tier1 && !tier2)
+
+            if (canCharge)
             {
-                tier2 = true;
-                AkSoundEngine.SetRTPCValue("MFLevel", 1, gameObject);
-                Util.PlaySound("PlayMistFinerLvlUp", gameObject);
-                //spawn the level up effect on the sheath
-                EffectData effectData = new EffectData
+                if (fixedAge >= lvl1time && !tier1)
                 {
-                    origin = childLoc.FindChild("SheenSpawn").transform.position,
-                    scale = 1f,
-                };
-                EffectManager.SpawnEffect(JohnnyAssets.mistFinerLvlUp, effectData, transmit: true);
-                if (headshotVisualizer)
-                    headshotVisualizer.UpdatePrefab(JohnnyAssets.headshotVisualizer2);
+                    tier1 = true;
+                    AkSoundEngine.SetRTPCValue("MFLevel", 0, gameObject);
+                    Util.PlaySound("PlayMistFinerLvlUp", gameObject);
+                    //spawn the level up effect on the sheath
+                    EffectData effectData = new EffectData
+                    {
+                        origin = childLoc.FindChild("SheenSpawn").transform.position,
+                        scale = 1f,
+                    };
+                    EffectManager.SpawnEffect(JohnnyAssets.mistFinerLvlUp, effectData, transmit: true);
+                    if (headshotVisualizer)
+                        headshotVisualizer.UpdatePrefab(JohnnyAssets.headshotVisualizer1);
+                }
+                if (fixedAge >= lvl2time && tier1 && !tier2)
+                {
+                    tier2 = true;
+                    AkSoundEngine.SetRTPCValue("MFLevel", 1, gameObject);
+                    Util.PlaySound("PlayMistFinerLvlUp", gameObject);
+                    //spawn the level up effect on the sheath
+                    EffectData effectData = new EffectData
+                    {
+                        origin = childLoc.FindChild("SheenSpawn").transform.position,
+                        scale = 1f,
+                    };
+                    EffectManager.SpawnEffect(JohnnyAssets.mistFinerLvlUp, effectData, transmit: true);
+                    if (headshotVisualizer)
+                        headshotVisualizer.UpdatePrefab(JohnnyAssets.headshotVisualizer2);
+                }
             }
 
             if (fixedAge >= fireTime && inputBank.skill2.justReleased)
@@ -141,7 +185,18 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
                 Fire();
             }
 
-            if (fixedAge >= duration && isAuthority && hasFired)
+            //if we actually set the flurry time start slashing the shit out of the world
+            if (flurryStartTime != 0)
+            {
+                flurryCounter += Time.deltaTime;
+                if (flurryCounter >= flurryInterval)
+                {
+                    FireFlurry();
+                    flurryCounter = 0;
+                }
+            }
+
+            if (fixedAge >= duration && isAuthority && hasFired && fixedAge >= flurryStartTime + Level3FlurryTimer)
             {
                 outer.SetNextStateToMain();
                 return;
@@ -152,6 +207,12 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         {
             if (!hasFired)
             {
+                //janky flurry stuff only applicable with coins
+                if (!canCharge && mistLevel == 3)
+                {
+                    flurryStartTime = fixedAge;
+                }
+
                 hasFired = true;
 
                 characterBody.AddSpreadBloom(1.5f);
@@ -176,7 +237,8 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
                         origin = aimRay.origin,
                         damage = damage,
                         damageColorIndex = DamageColorIndex.Default,
-                        damageType = DamageType.Generic,
+                        //If we are a higher level mist finer than level 1, we stun. This is only applicable with the Coins.
+                        damageType = mistLevel > 1 ? DamageType.Stun1s : DamageType.Generic,
                         falloffModel = BulletAttack.FalloffModel.None,
                         maxDistance = range,
                         hitMask = LayerIndex.CommonMasks.bullet,
@@ -204,7 +266,6 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
                                 damageInfo.damage *= 1.5f;
                                 damageInfo.damageType |= DamageType.BypassArmor | DamageType.WeakPointHit;
                                 damageInfo.damageColorIndex = DamageColorIndex.Sniper;
-
                             }
                         }
                     }.Fire();
@@ -216,11 +277,79 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
                         rotation = Util.QuaternionSafeLookRotation(aimRay.direction),
                     };
                     GameObject mistEffect = JohnnyAssets.mistFinerZap;
-                    if (tier1) mistEffect = JohnnyAssets.mistFinerZap2;
-                    if (tier2) mistEffect = JohnnyAssets.mistFinerZap3;
+                    if (tier1 || mistLevel == 2) mistEffect = JohnnyAssets.mistFinerZap2;
+                    if (tier2 || mistLevel == 3) mistEffect = JohnnyAssets.mistFinerZap3;
                     EffectManager.SpawnEffect(mistEffect, effectData, transmit: true);
                     Util.PlaySound("PlayMistFiner", gameObject);
                 }
+            }
+        }
+
+        private void FireFlurry()
+        {
+            Chat.AddMessage("Firing the flurry.");
+            if (isAuthority)
+            {
+                Ray aimRay = GetAimRay();
+
+                float damage = damageCoefficient * damageStat;
+                if (tier1) damage = 10f * damageStat;
+                if (tier2) damage = 15f * damageStat; //m,ake this 2.5 :itwouldseemtroll:
+                                                      //Mathf.Lerp(damage, damage * 2.5f, lvl2time)
+
+                Vector3 offset = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10));
+
+                new BulletAttack
+                {
+                    bulletCount = 1,
+                    aimVector = aimRay.direction,
+                    origin = aimRay.origin + offset,
+                    damage = damage,
+                    damageColorIndex = DamageColorIndex.Default,
+                    //If we are a higher level mist finer than level 1, we stun. This is only applicable with the Coins.
+                    damageType = mistLevel > 1 ? DamageType.Stun1s : DamageType.Generic,
+                    falloffModel = BulletAttack.FalloffModel.None,
+                    maxDistance = range,
+                    hitMask = LayerIndex.CommonMasks.bullet,
+                    minSpread = 0f,
+                    maxSpread = 0f,
+                    isCrit = RollCrit(),
+                    owner = gameObject,
+                    muzzleName = muzzleString,
+                    smartCollision = true,
+                    procChainMask = default,
+                    procCoefficient = procCoefficient,
+                    radius = 1,
+                    sniper = false,
+                    stopperMask = LayerIndex.world.collisionMask,
+                    //tracerEffectPrefab = JohnnyAssets.mistFinerZap,
+                    weapon = null,
+                    spreadPitchScale = 1f,
+                    spreadYawScale = 1f,
+                    queryTriggerInteraction = QueryTriggerInteraction.UseGlobal,
+                    hitEffectPrefab = EntityStates.Commando.CommandoWeapon.FirePistol2.hitEffectPrefab,
+                    modifyOutgoingDamageCallback = delegate (BulletAttack bulletAttack, ref BulletAttack.BulletHit hitInfo, DamageInfo damageInfo)
+                    {
+                        if (BulletAttack.IsSniperTargetHit(in hitInfo))
+                        {
+                            damageInfo.damage *= 1.5f;
+                            damageInfo.damageType |= DamageType.BypassArmor | DamageType.WeakPointHit;
+                            damageInfo.damageColorIndex = DamageColorIndex.Sniper;
+                        }
+                    }
+                }.Fire();
+
+                EffectData effectData = new EffectData
+                {
+                    origin = aimRay.origin + offset,
+                    scale = 1f,
+                    rotation = Util.QuaternionSafeLookRotation(aimRay.direction),
+                };
+                GameObject mistEffect = JohnnyAssets.mistFinerZap;
+                if (tier1 || mistLevel == 2) mistEffect = JohnnyAssets.mistFinerZap2;
+                if (tier2 || mistLevel == 3) mistEffect = JohnnyAssets.mistFinerZap3;
+                EffectManager.SpawnEffect(mistEffect, effectData, transmit: true);
+                Util.PlaySound("PlayMistFiner", gameObject);
             }
         }
 
