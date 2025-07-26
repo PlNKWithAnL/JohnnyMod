@@ -122,7 +122,7 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            Chat.AddMessage($"Mist Finer MF Level {mistLevel}");
+            //Chat.AddMessage($"Mist Finer MF Level {mistLevel}");
             if (!canCharge && !updatedVisual)
             {
                 updatedVisual = true;

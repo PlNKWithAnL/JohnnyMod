@@ -12,6 +12,8 @@ namespace JohnnyMod.Survivors.Johnny
 
         public const float coinDamageCoeffecient = 1.5f;
 
+        public const float coinRadius = 2.5f;
+
         // stored skills for replacement
         internal static SkillDef StepDash;
         internal static SkillDef MistFinerDash;

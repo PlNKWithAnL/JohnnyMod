@@ -24,7 +24,7 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
 
             this.damageCoefficient = characterBody.damage * JohnnyStaticValues.coinDamageCoeffecient;
             this.projectileBaseSpeed = 32f;
-            this.detonationRadius = 2.5f;
+            this.detonationRadius = JohnnyStaticValues.coinRadius;
             this.projectilePrefab = JohnnyAssets.coinProjectile;
             this.baseMinimumDuration = 0f;
             this.maxDistance = 100;

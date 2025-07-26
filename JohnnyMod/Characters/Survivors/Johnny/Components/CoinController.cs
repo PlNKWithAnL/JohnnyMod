@@ -106,8 +106,11 @@ namespace JohnnyMod.Survivors.Johnny.Components
 
         public void OnProjectileImpact(ProjectileImpactInfo impactInfo)
         {
-            // apply hurt state, its like stun but mostly helps with attack interruption good
             var body = Util.HurtBoxColliderToBody(impactInfo.collider);
+            //fuckup check
+            //Chat.AddMessage($"is body null {body == null}  is hc null {body != null && body.healthComponent == null}");
+
+            // apply hurt state, its like stun but mostly helps with attack interruption good
             if (body && body.TryGetComponent<SetStateOnHurt>(out var setStateOnHurt))
                 setStateOnHurt.SetPain();
 
@@ -115,7 +118,7 @@ namespace JohnnyMod.Survivors.Johnny.Components
             if (body && body.healthComponent && body.teamComponent.teamIndex != projCTRL.teamFilter.teamIndex)
             {
                 JohnnyStandee.AddMistFiner();
-                Chat.AddMessage($"Leveled up mistfiner to {JohnnyStandee.mfLevel}");
+                //.AddMessage($"Leveled up mistfiner to {JohnnyStandee.mfLevel}");
             }
 
             //if we landed on the ground
@@ -124,7 +127,7 @@ namespace JohnnyMod.Survivors.Johnny.Components
                 BlastAttack blastAttack = new BlastAttack
                 {
                     baseDamage = JohnnyStaticValues.coinDamageCoeffecient * 10,
-                    radius = 1.5f,
+                    radius = JohnnyStaticValues.coinRadius,
                     baseForce = 0f,
                     crit = false,
                     procCoefficient = 1f,
@@ -134,7 +137,7 @@ namespace JohnnyMod.Survivors.Johnny.Components
                     damageColorIndex = DamageColorIndex.WeakPoint,
                     teamIndex = projCTRL.teamFilter.teamIndex,
                     falloffModel = BlastAttack.FalloffModel.SweetSpot,
-                    position = transform.position,
+                    position = impactInfo.estimatedPointOfImpact,
                 };
 
                 blastAttack.Fire();

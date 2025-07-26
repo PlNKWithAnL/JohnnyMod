@@ -82,7 +82,7 @@ namespace JohnnyMod.Survivors.Johnny.Components
             AddTension(TENSION_PER_SECOND * Time.fixedDeltaTime);
             UpdateUI();
 
-            Chat.AddMessage($"MF Level {mfLevel}");
+            //Chat.AddMessage($"MF Level {mfLevel}");
         }
         
         private void UpdateUI()
