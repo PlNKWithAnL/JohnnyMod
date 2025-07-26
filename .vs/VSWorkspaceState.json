@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\JohnnyMod",
+    "\\JohnnyMod\\Characters",
+    "\\JohnnyMod\\Characters\\Survivors",
+    "\\JohnnyMod\\Characters\\Survivors\\Johnny",
+    "\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components",
+    "\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates"
+  ],
+  "SelectedNode": "\\JohnnyMod\\JohnnyPlugin.cs",
+  "PreviewInSolutionExplorer": false
+}

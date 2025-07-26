@@ -16,15 +16,15 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
 
         public override void OnEnter()
         {
-                    BaseDuration = baseMinimumDuration / attackSpeedStat;
+            BaseDuration = baseMinimumDuration / attackSpeedStat;
 
-                    Util.PlaySound("PlayMistFinerLvlUp", gameObject);
+            
 
-                    childLoc = GetModelChildLocator();
-                    childLoc.FindChild("GhostHilt").gameObject.SetActive(true);
-                    childLoc.FindChild("KatanaHilt").gameObject.SetActive(false);
-                    childLoc.FindChild("KatanaBlade").gameObject.SetActive(false);
-                    childLoc.FindChild("SwordSimp").gameObject.SetActive(false);
+            var childLoc = GetModelChildLocator();
+                childLoc.FindChild("GhostHilt").gameObject.SetActive(true);
+                childLoc.FindChild("KatanaHilt").gameObject.SetActive(false);
+                childLoc.FindChild("KatanaBlade").gameObject.SetActive(false);
+                childLoc.FindChild("SwordSimp").gameObject.SetActive(false);
 
             this.damageCoefficient = characterBody.damage * JohnnyStaticValues.coinDamageCoeffecient;
             this.projectileBaseSpeed = 32f;
@@ -34,19 +34,30 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
             this.baseMinimumDuration = 0.65f;
                 //BaseDuration / attackSpeedStat;
             this.maxDistance = 100;
-            this.setFuse = true;
+            this.setFuse = false;
             this.arcVisualizerPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/BasicThrowableVisualizer.prefab").WaitForCompletion();
-            this.endpointVisualizerPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Treebot/TreebotMortarAreaIndicator.prefab").WaitForCompletion();
+            this.endpointVisualizerPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/BasicThrowableVisualizer.prefab").WaitForCompletion();
             base.OnEnter();
+        }
+        public override void ModifyProjectile(ref FireProjectileInfo fireProjectileInfo) => base.ModifyProjectile(ref fireProjectileInfo);
+
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+        
+        }
+        public override void OnProjectileFiredLocal()
+        {
+            base.OnProjectileFiredLocal();
+            Util.PlaySound("PlayMistFinerLvlUp", gameObject);
             this.PlayAnimation("Gesture, Override", "Deal", "Deal.playbackRate", this.baseMinimumDuration);
             //        //this is only existing so i can do the ammend thing
         }
-        public override void ModifyProjectile(ref FireProjectileInfo fireProjectileInfo) => base.ModifyProjectile(ref fireProjectileInfo);
         //public class Coin : BaseSkillState
         //{
         //    public static float BaseDuration = 0.65f;
 
-        //    public float duration = 0.65f;
+        //    public float duration = 0.65f; 
 
         //    private bool hasFired = false;
         //    private Ray aimRay;
