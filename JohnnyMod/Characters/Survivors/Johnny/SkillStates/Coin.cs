@@ -16,10 +16,6 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
 
         public override void OnEnter()
         {
-            BaseDuration = baseMinimumDuration / attackSpeedStat;
-
-            
-
             var childLoc = GetModelChildLocator();
                 childLoc.FindChild("GhostHilt").gameObject.SetActive(true);
                 childLoc.FindChild("KatanaHilt").gameObject.SetActive(false);
@@ -28,29 +24,26 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
 
             this.damageCoefficient = characterBody.damage * JohnnyStaticValues.coinDamageCoeffecient;
             this.projectileBaseSpeed = 32f;
-            this.detonationRadius = 1.5f;
-                //BlastAttack.radius;
+            this.detonationRadius = 100f;
             this.projectilePrefab = JohnnyAssets.coinProjectile;
-            this.baseMinimumDuration = 0.65f;
-                //BaseDuration / attackSpeedStat;
+            this.baseMinimumDuration = 0f;
             this.maxDistance = 100;
             this.setFuse = false;
             this.arcVisualizerPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/BasicThrowableVisualizer.prefab").WaitForCompletion();
-            this.endpointVisualizerPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Common/VFX/BasicThrowableVisualizer.prefab").WaitForCompletion();
+            this.endpointVisualizerPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Huntress/HuntressArrowRainIndicator.prefab").WaitForCompletion();
+            this.useGravity = true;
             base.OnEnter();
         }
-        public override void ModifyProjectile(ref FireProjectileInfo fireProjectileInfo) => base.ModifyProjectile(ref fireProjectileInfo);
-
-        public override void FixedUpdate()
+        public override void ModifyProjectile(ref FireProjectileInfo fireProjectileInfo)
         {
-            base.FixedUpdate();
-        
+            base.ModifyProjectile(ref fireProjectileInfo);
         }
+
         public override void OnProjectileFiredLocal()
         {
             base.OnProjectileFiredLocal();
             Util.PlaySound("PlayMistFinerLvlUp", gameObject);
-            this.PlayAnimation("Gesture, Override", "Deal", "Deal.playbackRate", this.baseMinimumDuration);
+            this.PlayAnimation("Gesture, Override", "Deal", "Deal.playbackRate", 0.65f);
             //        //this is only existing so i can do the ammend thing
         }
         //public class Coin : BaseSkillState

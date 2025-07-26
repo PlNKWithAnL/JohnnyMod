@@ -106,21 +106,20 @@ namespace JohnnyMod.Survivors.Johnny.Components
 
         public void OnProjectileImpact(ProjectileImpactInfo impactInfo)
         {
-
             // apply hurt state, its like stun but mostly helps with attack interruption good
             var body = Util.HurtBoxColliderToBody(impactInfo.collider);
             if (body && body.TryGetComponent<SetStateOnHurt>(out var setStateOnHurt))
                 setStateOnHurt.SetPain();
 
             //if we actually hit something level up mist finer
-            if (body.healthComponent && body.teamComponent.teamIndex != projCTRL.teamFilter.teamIndex)
+            if (body && body.healthComponent && body.teamComponent.teamIndex != projCTRL.teamFilter.teamIndex)
             {
                 JohnnyStandee.AddMistFiner();
                 Chat.AddMessage($"Leveled up mistfiner to {JohnnyStandee.mfLevel}");
             }
 
             //if we landed on the ground
-            if (!body.healthComponent)
+            if (!body || !body.healthComponent)
             {
                 BlastAttack blastAttack = new BlastAttack
                 {
