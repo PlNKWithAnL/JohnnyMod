@@ -43,7 +43,7 @@ namespace JohnnyMod.Survivors.Johnny
         internal static Shader hotpoo = Resources.Load<Shader>("Shaders/Deferred/HGStandard");
 
         internal static GameObject emoteAPISkeleton;
-
+        
         // ui stuff
         public static GameObject tensionGauge;
 
