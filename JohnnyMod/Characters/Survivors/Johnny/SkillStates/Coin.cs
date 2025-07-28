@@ -12,8 +12,6 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
 {
     class Coin : AimThrowableBase
     {
-        public float BaseDuration { get; private set; }
-
         public override void OnEnter()
         {
             var childLoc = GetModelChildLocator();
@@ -43,7 +41,7 @@ namespace JohnnyMod.Survivors.Johnny.SkillStates
         {
             base.OnProjectileFiredLocal();
             Util.PlaySound("PlayMistFinerLvlUp", gameObject);
-            this.PlayAnimation("Gesture, Override", "Deal", "Deal.playbackRate", 0.65f);
+            this.PlayAnimation("Gesture, Override", "Deal", "Deal.playbackRate", 0.65f / AttackSpeedStat);
             //        //this is only existing so i can do the ammend thing
         }
         //public class Coin : BaseSkillState

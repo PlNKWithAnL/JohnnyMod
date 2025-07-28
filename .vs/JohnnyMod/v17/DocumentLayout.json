@@ -1,12 +1,88 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\Coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\Coin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\JohnnyTensionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\JohnnyTensionController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\MistFiner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\MistFiner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\CoinController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\CoinController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "JohnnyTensionController.cs",
+              "DocumentMoniker": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\JohnnyTensionController.cs",
+              "RelativeDocumentMoniker": "JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\JohnnyTensionController.cs",
+              "ToolTip": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\JohnnyTensionController.cs",
+              "RelativeToolTip": "JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\JohnnyTensionController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-28T09:28:08.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MistFiner.cs",
+              "DocumentMoniker": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\MistFiner.cs",
+              "RelativeDocumentMoniker": "JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\MistFiner.cs",
+              "ToolTip": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\MistFiner.cs",
+              "RelativeToolTip": "JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\MistFiner.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-28T09:28:06.887Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CoinController.cs",
+              "DocumentMoniker": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\CoinController.cs",
+              "RelativeDocumentMoniker": "JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\CoinController.cs",
+              "ToolTip": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\CoinController.cs",
+              "RelativeToolTip": "JohnnyMod\\Characters\\Survivors\\Johnny\\Components\\CoinController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-28T09:28:03.713Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Coin.cs",
+              "DocumentMoniker": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\Coin.cs",
+              "RelativeDocumentMoniker": "JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\Coin.cs",
+              "ToolTip": "C:\\Users\\willt\\OneDrive\\Documents\\GitHub\\JohnnyMod\\JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\Coin.cs",
+              "RelativeToolTip": "JohnnyMod\\Characters\\Survivors\\Johnny\\SkillStates\\Coin.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAAIwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-28T09:27:58.092Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
